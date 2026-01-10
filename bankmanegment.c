@@ -1,146 +1,212 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-int i = 0;
+int i = 1;
 
 struct bank {
+    int accno, num, pin;
     char name[50];
-    int mobile;
-    int acc_no;
-    float balance;
-} bank[5];
+    int balance;
+    char nominee[50], address[50];
+} bank[55];
 
 void createAccount() {
-    if (i >= 5) {
-        printf("Account limit reached!\n");
-        return;
-    }
-
-    printf("\n--- Create Bank Account ---\n");
-    printf("Enter Name: ");
+    printf("Enter Account Name: ");
     scanf("%s", bank[i].name);
-
-    printf("Enter Mobile No: ");
-    scanf("%d", &bank[i].mobile);
-
-    printf("Enter Account No: ");
-    scanf("%d", &bank[i].acc_no);
-
-    printf("Enter Initial Deposit (min 100): ");
-    scanf("%f", &bank[i].balance);
-
-    if (bank[i].balance < 100) {
-        printf("Minimum deposit must be 100\n");
-        return;
-    }
-
-    printf("Account Created Successfully!\n");
+    printf("Enter Account Number: ");
+    scanf("%d", &bank[i].accno);
+    printf("Enter Mobile Number: ");
+    scanf("%d", &bank[i].num);
+    printf("Enter Address: ");
+    scanf("%s", bank[i].address);
+    printf("Enter Security PIN: ");
+    scanf("%d", &bank[i].pin);
+    printf("Enter Nominee Name: ");
+    scanf("%s", bank[i].nominee);
+    bank[i].balance = 0;  
+    printf("\n\t▪︎▪︎▪︎ Account Created Successfully ▪︎▪︎▪︎\n\n");
     i++;
 }
 
 void displayAccount() {
-    if (i == 0) {
-        printf("No accounts available\n");
-        return;
-    }
-    int j;
-    for ( j = 0; j < i; j++) {
-        printf("\nAccount %d\n", j + 1);
-        printf("Name: %s\n", bank[j].name);
-        printf("Mobile: %d\n", bank[j].mobile);
-        printf("Account No: %d\n", bank[j].acc_no);
-        printf("Balance: %.2f\n", bank[j].balance);
-    }
-}
-
-void atmMenu() {
-    int acc, choice;
-    float amount;
-    int found = -1;
-
-    printf("\nEnter Account Number: ");
+    int acc, pin, found = 0;
+    printf("Enter your account number: ");
     scanf("%d", &acc);
-     int j;
-    for ( j = 0; j < i; j++) {
-        if (bank[j].acc_no == acc) {
-            found = j;
+    printf("Enter PIN: ");
+    scanf("%d", &pin);
+    
+    for (int j = 1; j < i; j++) {
+        if (acc == bank[j].accno && pin == bank[j].pin) {
+            printf("\t*** Your Account Details ***\n");
+            printf("Account Name: %s\n", bank[j].name);
+            printf("Account Number: %d\n", bank[j].accno);
+            printf("Phone Number: %d\n", bank[j].num);
+            printf("Address: %s\n", bank[j].address);
+            printf("Balance: Rs. %d\n", bank[j].balance);
+            printf("Nominee Name: %s\n", bank[j].nominee);
+            found = 1;
             break;
         }
     }
-
-    if (found == -1) {
-        printf("Account not found!\n");
-        return;
+    if (!found) {
+        printf("Invalid account number or PIN! Please try again.\n");
     }
+}
 
+void depositMoney() {
+    int acc, pin, amount, found = 0;
+    printf("\nEnter your account number: ");
+    scanf("%d", &acc);
+    printf("Enter your PIN: ");
+    scanf("%d", &pin);
+    
+    for (int j = 1; j < i; j++) {
+        if (acc == bank[j].accno && pin == bank[j].pin) {
+            printf("Enter deposit amount: ");
+            scanf("%d", &amount);
+            bank[j].balance += amount;
+            printf("Rs. %d deposited successfully.\n", amount);
+            printf("New balance: Rs. %d\n\n", bank[j].balance);
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Invalid account number or PIN! Please try again.\n");
+    }
+}
+
+void withdrawMoney() {
+    int acc, pin, amount, found = 0;
+    printf("\nEnter your account number: ");
+    scanf("%d", &acc);
+    printf("Enter your PIN: ");
+    scanf("%d", &pin);
+    
+    for (int j = 1; j < i; j++) {
+        if (acc == bank[j].accno && pin == bank[j].pin) {
+            printf("Enter withdrawal amount: ");
+            scanf("%d", &amount);
+            if (amount > bank[j].balance) {
+                printf("Insufficient balance!\n");
+            } else {
+                bank[j].balance -= amount;
+                printf("Rs. %d withdrawn successfully.\n", amount);
+                printf("New balance: Rs. %d\n\n", bank[j].balance);
+            }
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Invalid account number or PIN! Please try again.\n");
+    }
+}
+
+// ATM Management System
+void atmMenu() {
+    int acc, pin, choice, found = 0;
+    
+    printf("\n--- ATM Management System ---\n");
+    printf("Enter your account number: ");
+    scanf("%d", &acc);
+    printf("Enter your PIN: ");
+    scanf("%d", &pin);
+    
+    for (int j = 1; j < i; j++) {
+        if (acc == bank[j].accno && pin == bank[j].pin) {
+            found = 1;
+            while (1) {
+                printf("\n--- ATM Menu ---\n");
+                printf("1. Withdraw Cash\n");
+                printf("2. Check Balance\n");
+                printf("3. Change PIN\n");
+                printf("4. Exit ATM\n");
+                printf("Enter your choice: ");
+                scanf("%d", &choice);
+                
+                switch (choice) {
+                    case 1:
+                        withdrawMoney();
+                        break;
+                    case 2:
+                        printf("Your current balance: Rs. %d\n", bank[j].balance);
+                        break;
+                    case 3:
+                        printf("Enter new PIN: ");
+                        scanf("%d", &bank[j].pin);
+                        printf("PIN changed successfully!\n");
+                        break;
+                    case 4:
+                        return;
+                    default:
+                        printf("Invalid choice! Please try again.\n");
+                }
+            }
+        }
+    }
+    if (!found) {
+        printf("Invalid account number or PIN! Please try again.\n");
+    }
+}
+
+void bankingMenu() {
+    int choice;
     while (1) {
-        printf("\n--- ATM MENU ---");
-        printf("\n1. Check Balance");
-        printf("\n2. Deposit");
-        printf("\n3. Withdraw");
-        printf("\n4. Exit ATM\n");
-
+        printf("\n--- Banking Management System ---\n");
+        printf("1. Create an Account\n");
+        printf("2. Display Account Details\n");
+        printf("3. Deposit Money\n");
+        printf("4. Withdraw Money\n");
+        printf("5. Back to Main Menu\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
-
+        
         switch (choice) {
             case 1:
-                printf("Current Balance: %.2f\n", bank[found].balance);
+                createAccount();
                 break;
-
             case 2:
-                printf("Enter amount to deposit: ");
-                scanf("%f", &amount);
-                bank[found].balance += amount;
-                printf("Amount Deposited Successfully\n");
+                displayAccount();
                 break;
-
             case 3:
-                printf("Enter amount to withdraw: ");
-                scanf("%f", &amount);
-                if (amount > bank[found].balance) {
-                    printf("Insufficient Balance\n");
-                } else {
-                    bank[found].balance -= amount;
-                    printf("Please collect your cash\n");
-                }
+                depositMoney();
                 break;
-
             case 4:
+                withdrawMoney();
+                break;
+            case 5:
                 return;
-
             default:
-                printf("Invalid choice\n");
+                printf("Invalid choice! Please try again.\n");
         }
     }
 }
 
-int main() {
+void main() {
     int choice;
-
     while (1) {
-        printf("\n====== MAIN MENU ======");
-        printf("\n1. Bank System");
-        printf("\n2. ATM System");
-        printf("\n3. Exit\n");
-
+        printf("\n\t\t*** Welcome ***\n");
+        printf("\t\t==============\n");
+        printf("1. Banking Management System\n");
+        printf("2. ATM     Management System\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
-
+        
         switch (choice) {
             case 1:
-                createAccount();
-                displayAccount();
+                bankingMenu();
                 break;
-
             case 2:
                 atmMenu();
                 break;
-
             case 3:
-                printf("Thank you for using Bank System\n");
-                return 0;
-
+                printf("Thank you for using our services!\n");
+                exit(0);
             default:
-                printf("Invalid Choice\n");
+                printf("Invalid choice! Please try again.\n");
         }
     }
 }
