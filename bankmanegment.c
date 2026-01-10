@@ -10,7 +10,6 @@ struct bank {
     int balance;
     char nominee[50], address[50];
 } bank[55];
-
 void createAccount() {
     printf("Enter Account Name: ");
     scanf("%s", bank[i].name);
@@ -35,7 +34,6 @@ void displayAccount() {
     scanf("%d", &acc);
     printf("Enter PIN: ");
     scanf("%d", &pin);
-    
     for (int j = 1; j < i; j++) {
         if (acc == bank[j].accno && pin == bank[j].pin) {
             printf("\t*** Your Account Details ***\n");
@@ -210,3 +208,4 @@ void main() {
         }
     }
 }
+
