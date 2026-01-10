@@ -185,7 +185,7 @@ void bankingMenu() {
 void main() {
     int choice;
     while (1) {
-        printf("\n\t\t*** Welcome ***\n");
+        printf("\n\t\t*** Welcome to bank manegment system ***\n");
         printf("\t\t==============\n");
         printf("1. Banking Management System\n");
         printf("2. ATM     Management System\n");
@@ -201,11 +201,12 @@ void main() {
                 atmMenu();
                 break;
             case 3:
-                printf("Thank you for using our services!\n");
+                printf("****Thank you for using our services!****\n");
                 exit(0);
             default:
                 printf("Invalid choice! Please try again.\n");
         }
     }
 }
+
 
