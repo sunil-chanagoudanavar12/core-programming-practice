@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 int i = 1;
-
 struct bank {
     int accno, num, pin;
     char name[50];
@@ -208,5 +206,6 @@ void main() {
         }
     }
 }
+
 
 
